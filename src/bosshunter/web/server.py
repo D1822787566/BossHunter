@@ -67,6 +67,7 @@ from bosshunter.db import (
 	soft_delete_jobs,
 	edit_job_greeting,
 	update_job_status,
+	update_jobs_manual_status,
 )
 from bosshunter.collection.capabilities import platform_supports
 from bosshunter.collection.orchestrator import CollectionOrchestrator, normalize_collection_options
@@ -3154,6 +3155,23 @@ def api_jobs_manual_sent():
 		return _json_response(result)
 	except (ValueError, JobManualSentConflictError) as exc:
 		return _job_action_error(exc)
+	finally:
+		db.close()
+
+
+@app.route("/api/jobs/status", method="POST")
+def api_jobs_status():
+	db = _get_web_db()
+	try:
+		body, job_ids = _job_action_payload()
+		with job_mutation_lock:
+			conflict = _active_task_mutation_error()
+			if conflict is not None:
+				return conflict
+			result = update_jobs_manual_status(db, job_ids, str(body.get("status") or ""))
+		return _json_response(result)
+	except ValueError as exc:
+		return _json_response({"error": str(exc), "code": "status_change_blocked"}, 409)
 	finally:
 		db.close()
 

@@ -1380,6 +1380,42 @@ class WebApiRouteTests(unittest.TestCase):
         self.assertEqual(row["status"], "sent")
         self.assertEqual([item["action"] for item in history], ["manual_sent"])
 
+    def test_web_api_manual_status_updates_history_and_blocks_sent_jobs(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base_dir = Path(tmp)
+            db = get_db(base_dir / "data" / "bosshunter.db")
+            try:
+                ready = _job("manual-status-ready")
+                sent = _job("manual-status-sent")
+                insert_job(db, ready)
+                insert_job(db, sent)
+                update_job_status(db, sent["id"], "sent")
+            finally:
+                db.close()
+            server.set_base_dir(base_dir)
+
+            status, _, body = self._request(
+                "/api/jobs/status", method="POST",
+                json_body={"job_ids": [ready["id"]], "status": "skipped"},
+            )
+            blocked_status, _, blocked_body = self._request(
+                "/api/jobs/status", method="POST",
+                json_body={"job_ids": [sent["id"]], "status": "ready"},
+            )
+            verify_db = get_db(base_dir / "data" / "bosshunter.db")
+            try:
+                row = verify_db.execute("SELECT status FROM jobs WHERE id = ?", (ready["id"],)).fetchone()
+                history = verify_db.execute("SELECT action, detail FROM history WHERE job_id = ?", (ready["id"],)).fetchall()
+            finally:
+                verify_db.close()
+
+        self.assertTrue(status.startswith("200"), body)
+        self.assertEqual(json.loads(body)["affected_count"], 1)
+        self.assertTrue(blocked_status.startswith("409"), blocked_body)
+        self.assertEqual(row["status"], "skipped")
+        self.assertEqual(history[0]["action"], "status_changed")
+        self.assertIn("pending", history[0]["detail"])
+
     def test_web_api_cities_returns_bundled_liepin_snapshot(self):
         status, _, body = self._request("/api/cities?platform=liepin")
 
