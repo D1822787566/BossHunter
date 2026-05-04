@@ -786,6 +786,34 @@ class WebApiRouteTests(unittest.TestCase):
         self.assertEqual(payload["limit"], 15)
         self.assertEqual(payload["offset"], 0)
 
+    def test_job_search_supports_repeated_multi_select_filters(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base_dir = Path(tmp)
+            db = get_db(base_dir / "data" / "bosshunter.db")
+            try:
+                fixtures = [
+                    ("boss-ready", "boss", "experienced", "本科", "ready"),
+                    ("zhilian-filtered", "zhilian", "campus", "硕士", "filtered"),
+                    ("liepin-ready", "liepin", "experienced", "大专", "ready"),
+                ]
+                for job_id, platform, recruitment_type, education, status_value in fixtures:
+                    job = _job(job_id)
+                    job.update({"source_platform": platform, "recruitment_type": recruitment_type, "education": education})
+                    insert_job(db, job)
+                    update_job_status(db, job_id, status_value)
+            finally:
+                db.close()
+            server.set_base_dir(base_dir)
+
+            status, _, body = self._request(
+                "/api/jobs/search?source_platform=boss&source_platform=zhilian&"
+                "recruitment_type=experienced&recruitment_type=campus&status=ready&status=filtered"
+            )
+
+        payload = json.loads(body)
+        self.assertTrue(status.startswith("200"), body)
+        self.assertCountEqual([job["id"] for job in payload["items"]], ["zhilian-filtered", "boss-ready"])
+
     def test_job_search_salary_overlap_excludes_unparseable_and_paginates(self):
         with tempfile.TemporaryDirectory() as tmp:
             base_dir = Path(tmp)

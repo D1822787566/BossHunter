@@ -411,7 +411,7 @@ export default function DashboardPage({ view = 'workbench' }: DashboardPageProps
     [workbench.pending_confirmation, confirmedDeliveryIds]
   )
   const debouncedTodayQuery = useDebouncedValue(todayFilters.query, 250)
-  const activeTodayFilterCount = Object.values(todayFilters).filter(value => value !== '').length
+  const activeTodayFilterCount = Object.values(todayFilters).filter(value => Array.isArray(value) ? value.length > 0 : value !== '').length
   const effectiveTodayFilters = useMemo(
     () => ({ ...todayFilters, query: debouncedTodayQuery }),
     [todayFilters, debouncedTodayQuery]
@@ -1800,6 +1800,8 @@ function JobsPoolView() {
             status: filters.status,
             created_within: filters.createdWithin,
             source_platform: filters.sourcePlatform,
+            education: filters.education,
+            recruitment_type: filters.recruitmentType,
           } : {},
         }),
       })
