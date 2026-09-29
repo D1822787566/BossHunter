@@ -47,14 +47,6 @@
 |---|---|---|---|---|
 | — | — | — | — | — |
 
-## 已结束的候选观察期
-
-| GitHub | 曾任角色 | 观察期 | 结束记录 |
-|---|---|---|---|
-| [@shuaigechz-cloud](https://github.com/shuaigechz-cloud) | 候选维护者（Triage） | 2026-09-07 至 2026-09-29 | 项目负责人决定结束候选资格，未晋升正式维护者；Triage 权限已撤销，既有项目贡献记录保留。 |
-
-该候选人于 **2026-09-07 08:16（北京时间）**接受邀请，开始观察期。历史证据：[GitHub 成员事件](https://api.github.com/repos/shengjidaguai-china/BossHunter/events)（事件 ID：14535877238）；[已采用的项目贡献](CONTRIBUTORS.md)。
-
 ## 记录规则
 
 - 新增、晋升、暂停、恢复和离任均通过 Pull Request 修改本文件。
