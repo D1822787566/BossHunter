@@ -31,11 +31,7 @@
 
 候选人确认参与后，在这里记录观察期；尚未获得正式维护者身份或 `Write` 权限。
 
-| GitHub | 擅长方向 | 观察期开始 | 推荐/带教人 | 状态 |
-|---|---|---|---|---|
-| [@shuaigechz-cloud](https://github.com/shuaigechz-cloud) | 会话与消息链路、招呼语约束、定制简历与人工确认 | 2026-09-07 | 待指定 | 观察中（Triage；已接受邀请） |
-
-邀请于 **2026-09-07 08:16（北京时间）**接受，仓库 Triage 权限已生效。证据：[GitHub 成员事件](https://api.github.com/repos/shengjidaguai-china/BossHunter/events)（事件 ID：14535877238）；[已采用的项目贡献](CONTRIBUTORS.md)。
+当前暂无已确认参与的候选维护者。
 
 ## 现任维护者贡献详情
 
@@ -50,6 +46,14 @@
 | GitHub | 曾任角色 | 负责范围 | 任期 | 维护摘要 |
 |---|---|---|---|---|
 | — | — | — | — | — |
+
+## 已结束的候选观察期
+
+| GitHub | 曾任角色 | 观察期 | 结束记录 |
+|---|---|---|---|
+| [@shuaigechz-cloud](https://github.com/shuaigechz-cloud) | 候选维护者（Triage） | 2026-09-07 至 2026-09-29 | 项目负责人决定结束候选资格，未晋升正式维护者；Triage 权限已撤销，既有项目贡献记录保留。 |
+
+该候选人于 **2026-09-07 08:16（北京时间）**接受邀请，开始观察期。历史证据：[GitHub 成员事件](https://api.github.com/repos/shengjidaguai-china/BossHunter/events)（事件 ID：14535877238）；[已采用的项目贡献](CONTRIBUTORS.md)。
 
 ## 记录规则
 
